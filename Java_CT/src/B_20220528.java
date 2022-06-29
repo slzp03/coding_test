@@ -1,52 +1,87 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class B_20220528 {
 
 	public static void main(String[] args) {
 
+	    Scanner sc = new Scanner(System.in);
+	   
+	    String line1 = sc.nextLine();
+	    String line2 = sc.nextLine();
+	    
+	    int n = Integer.parseInt(line1);
+	    String arr[] = line2.split(" ");
+	    
+	    int max = Integer.parseInt(arr[0]);
+	    int min = Integer.parseInt(arr[0]);
+	    
+	    int temp = 0;
+	    int result[] = new int[n];
+	    for(int i=0; i<n; i++) {
+	    	result[i] = Integer.parseInt(arr[i]);
+	    	
+	    	if(result[i] < min) {
+	    		min = result[i];
+	    	}
+	    	if(result[i] > max) {
+	    		max = result[i];
+	    	}
+	    }
+	    
+	    m_pivot_sort(result, 0, n - 1);
+	    
+	    System.out.println(min + " " +max);
+    	for(int x:result)
+    	System.out.printf("%d",x);
+	  }
 
-		Scanner sc = new Scanner(System.in);
+	private static void m_pivot_sort(int[] a, int lo, int hi) {
 		
-		//N = ゴンドラの数
-		int n = sc.nextInt();
-		//M = 組の数
-		int m = sc.nextInt();
-		// gon = 各ゴンドラの最大人巣
-		int gon[] = new int[n];
-		// hito = 各組の人数
-		int hito[] = new int[m];
-		
-		int temp = 0;
-		for(int i=0; i<n+m; i++) {
-			if(temp < n) {
-				gon[temp] = sc.nextInt();
-			} else{
-				hito[temp-n] = sc.nextInt();
-			}
-			temp++;
+		if(lo >= hi) {
+			return;
 		}
 		
-		// result
-		int result[] = new int[n];
-
-		int i = 0;
-		int j = 0;
-		while(true) {
-			if(hito[i] > 0) {
-				if(hito[i] <= gon[j]) {
-					result[j] += hito[i];
-					hito[i] -= hito[i];
-				}else {
-					result[j] += gon[j];
-					hito[i] -= gon[j];
-				}
-				if(hito[i] == 0)i++;
-			}
-			j++;
-			if(j >= n)j=0;
-			if(i==m)break;
-		}
-		for(int x : result)System.out.println(x);
+		int pivot = partition(a, lo, hi);	
+		
+		m_pivot_sort(a, lo, pivot);
+		m_pivot_sort(a, pivot + 1, hi);
 	}
-
+	
+	private static int partition(int[] a, int left, int right) {
+		
+		int lo = left - 1;
+		int hi = right + 1;
+		int pivot = a[(left + right) / 2];		
+		
+ 
+		while(true) {
+			
+			do { 
+				lo++; 
+			} while(a[lo] < pivot);
+ 
+			
+			do {
+				hi--;
+			} while(a[hi] > pivot && lo <= hi);
+			
+			
+			if(lo >= hi) {
+				return hi;
+			}
+			
+			swap(a, lo, hi);
+		}
+		
+	}
+	
+	
+	
+	private static void swap(int[] a, int i, int j) {
+		int temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
+	}
+	
 }
